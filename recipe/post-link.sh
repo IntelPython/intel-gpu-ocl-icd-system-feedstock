@@ -16,7 +16,7 @@
 
 systemwide_vendors=/etc/OpenCL/vendors
 env_vendors=${PREFIX}/etc/OpenCL/vendors
-env_icd_fn=$local_vendors/intel-ocl-gpu.icd
+env_icd_fn=$env_vendors/intel-ocl-gpu.icd
 
 if [[ -d $systemwide_vendors ]]
 then
@@ -24,10 +24,14 @@ then
     if [[ -f $systemwide_icd_fn ]]
     then
         ln -s $systemwide_icd_fn $env_icd_fn
-        echo "Symbolic link was successfully created. OpenCL GPU device should be discoverable by OpenCL loader." >> ${PREFIX}/.messages.txt
+        echo "Symbolic link was successfully created. OpenCL GPU device should be discoverable by OpenCL loader.\n" >> ${PREFIX}/.messages.txt
     else
-        echo "No ICD file for Intel(R) GPU device was found in '${systemwise_vendors}'." >> ${PREFIX}/.messages.txt
+        echo "No ICD file for Intel(R) GPU device was found in '${systemwise_vendors}'.\n" >> ${PREFIX}/.messages.txt
+        echo "Creating default symbolic link.\n" >> ${PREFIX}/.messages.txt
+        ln -s ${systemwide_vendors}/intel.icd $env_icd_fn
     fi
 else
-    echo "Folder '${systemwide_vendors}' does not exist. Try installing GPU drivers and then reinstall intel-gpu-ocl-icd-system conda package" >> $PREFIX/.messages.txt
+    echo "Folder '${systemwide_vendors}' does not exist. \n" >> $PREFIX/.messages.txt
+    echo "Creating default symbolic link. \n" >> ${PREFIX}/.messages.txt
+    ln -s ${systemwide_vendors}/intel.icd $env_icd_fn
 fi
