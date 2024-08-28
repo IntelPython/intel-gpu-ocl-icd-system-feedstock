@@ -3,7 +3,7 @@ name: Conda package
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
 
 permissions: read-all
@@ -47,7 +47,7 @@ jobs:
 
   upload_linux:
     needs: build_and_test_linux
-    if: ${{github.ref == 'refs/heads/master' || (startsWith(github.ref, 'refs/heads/release') == true) || github.event_name == 'push' && contains(github.ref, 'refs/tags/')}}
+    if: ${{github.ref == 'refs/heads/main' || github.event_name == 'push' && contains(github.ref, 'refs/tags/')}}
     runs-on: ubuntu-latest
     steps:
       - name: Download conda artifact
