@@ -1,0 +1,76 @@
+name: Conda package
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+permissions: read-all
+
+env:
+  PACKAGE_NAME: intel-gpu-ocl-icd-system
+
+
+jobs:
+  build_and_test_linux:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4.1.7
+        with:
+          fetch-depth: 0
+
+      - name: Set pkgs_dirs
+        run: |
+          echo "pkgs_dirs: [~/.conda/pkgs]" >> ~/.condarc
+
+      - name: Add conda to system path
+        run: echo $CONDA/bin >> $GITHUB_PATH
+
+      - name: Install conda-build
+        run: conda install conda-build -c conda-forge --override-channels
+
+      - name: Build conda package
+        run: |
+          # use bootstrap channel to pull NumPy linked with OpenBLAS
+          CHANNELS="-c conda-forge --override-channels"
+          conda build \
+            $CHANNELS \
+            recipe
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4.3.6
+        with:
+          name: ${{ env.PACKAGE_NAME }} ${{ runner.os }}
+          path: /usr/share/miniconda/conda-bld/noarch/${{ env.PACKAGE_NAME }}-*.tar.bz2
+
+  upload_linux:
+    needs: build_and_test_linux
+    if: ${{github.ref == 'refs/heads/master' || (startsWith(github.ref, 'refs/heads/release') == true) || github.event_name == 'push' && contains(github.ref, 'refs/tags/')}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download conda artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.PACKAGE_NAME }} ${{ runner.os }}
+
+      - name: Install anaconda-client
+        run: conda install anaconda-client -c conda-forge --override-channels
+      - name: Add conda to system path
+        run: echo $CONDA/bin >> $GITHUB_PATH
+      - name: Package version
+        run: echo "PACKAGE_VERSION=$(basename ${{ env.PACKAGE_NAME }}-*.tar.bz2 | sed 's/^${{ env.PACKAGE_NAME }}-\([^-]*\).*/\1/')" >> $GITHUB_ENV
+
+      - name: Upload
+        env:
+          ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
+        run: |
+          anaconda --token $ANACONDA_TOKEN upload --user dppy --label dev ${PACKAGE_NAME}-*.tar.bz2
+
+      - name: Upload Wheels
+        env:
+          ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
+        run: anaconda --token ${{ env.ANACONDA_TOKEN }} upload --user dppy --label dev ${{ env.PACKAGE_NAME }}-*.whl --version ${{ env.PACKAGE_VERSION }}
+
+

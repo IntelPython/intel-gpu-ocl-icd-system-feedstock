@@ -6,6 +6,7 @@ package:
   version: {{ version }}
 
 build:
+  noarch: generic
   number: 0
   skip: True  # [not linux]
 
@@ -16,7 +17,7 @@ requirements:
 test:
   commands:
     - export ICD_FN=${CONDA_PREFIX}/etc/OpenCL/vendors/intel-ocl-gpu.icd
-    - test -h ${ICD_FN} || test ! -a ${ICD_FN}
+    - test -h ${ICD_FN}
 
 about:
   home: https://github.com/IntelPython/{{ name|lower }}-feedstock
