@@ -68,9 +68,3 @@ jobs:
         run: |
           anaconda --token $ANACONDA_TOKEN upload --user dppy --label dev ${PACKAGE_NAME}-*.tar.bz2
 
-      - name: Upload Wheels
-        env:
-          ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
-        run: anaconda --token ${{ env.ANACONDA_TOKEN }} upload --user dppy --label dev ${{ env.PACKAGE_NAME }}-*.whl --version ${{ env.PACKAGE_VERSION }}
-
-
