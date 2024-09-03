@@ -7,7 +7,7 @@ package:
 
 build:
   noarch: generic
-  number: 0
+  number: 1
   skip: True  # [not linux]
 
 requirements:
@@ -33,6 +33,14 @@ about:
     by the OpenCL loader requires creation of appropriate ICD file in the conda environment's
     own vendors folder. This metapackage creates such an ICD as a symbolic link to the ICD
     installed system-wide.
+    <strong>LEGAL NOTICE: Use of this software package is subject to the
+    software license agreement (as set forth above, in the license section of
+    the installed Conda package and/or the README file) and all notices,
+    disclaimers or license terms for third party or open source software
+    included in or with the software.</strong>
+    <br/><br/>
+    EULA: <a href="https://www.intel.com/content/dam/develop/external/us/en/documents/pdf/intel-developer-tools-eula-09-03-19.pdf" target="_blank">LicenseRef-Proprietary-Intel-End-User-License-Agreement-for-Developer-Tools</a>
+    <br/><br/>
 
 extra:
   recipe-maintainers:
