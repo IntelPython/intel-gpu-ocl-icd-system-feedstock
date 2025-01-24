@@ -35,8 +35,10 @@ jobs:
         run: |
           # use bootstrap channel to pull NumPy linked with OpenBLAS
           CHANNELS="-c conda-forge --override-channels"
+          DEBUG="--debug"
           conda build \
             $CHANNELS \
+            $DEBUG \
             recipe
 
       - name: Upload artifact
