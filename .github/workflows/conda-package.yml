@@ -37,7 +37,7 @@ jobs:
           CHANNELS="-c conda-forge --override-channels"
           conda build \
             $CHANNELS \
-            recipe
+            conda-recipe
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4.6.2
