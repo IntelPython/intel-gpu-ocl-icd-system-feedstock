@@ -40,7 +40,7 @@ jobs:
             conda-recipe
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v5.0.0
+        uses: actions/upload-artifact@v6.0.0
         with:
           name: ${{ env.PACKAGE_NAME }} ${{ runner.os }}
           path: /usr/share/miniconda/conda-bld/noarch/${{ env.PACKAGE_NAME }}-*.tar.bz2
